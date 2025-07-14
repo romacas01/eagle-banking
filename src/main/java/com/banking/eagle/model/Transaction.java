@@ -15,7 +15,7 @@ public class Transaction {
     private Long id;
 
     @Column(nullable = false)
-    private String type;
+    private TransactionType type;
     @Column(nullable = false)
     private Double amount;
     @Column(nullable = false)

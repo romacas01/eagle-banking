@@ -14,5 +14,4 @@ public class AccountResponse {
 
     private String accountNumber;
     private BigDecimal balance;
-    private User user;
 }

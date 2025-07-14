@@ -18,9 +18,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final CurrentUserService currentUserService;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           CurrentUserService currentUserService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.currentUserService = currentUserService;
     }
 
     @Override
@@ -45,12 +50,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUserId(Long userId) {
-        return getUserFromDbById(userId);
+        return currentUserService.getUserFromDbById(userId);
     }
 
     @Override
     public User updateUser(Long id, UpdateUserRequest userRequest) {
-        User userFromDb = getUserFromDbById(id);
+        User userFromDb = currentUserService.getUserFromDbById(id);
 
         User user1 = new User();
         user1.setId(userFromDb.getId());
@@ -61,19 +66,5 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(user1);
 
-    }
-
-    private User getUserFromDbById(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id: " + userId + " not found");
-        }
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!user.get().getUsername().equals(username)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this user.");
-        }
-
-        return user.get();
     }
 }

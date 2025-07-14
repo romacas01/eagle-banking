@@ -1,11 +1,14 @@
 package com.banking.eagle.controller;
 
 import com.banking.eagle.model.Account;
+import com.banking.eagle.model.Transaction;
 import com.banking.eagle.model.User;
 import com.banking.eagle.model.request.AccountResponse;
 import com.banking.eagle.model.request.CreateAccountRequest;
 import com.banking.eagle.model.request.CreateAccountResponse;
+import com.banking.eagle.model.request.CreateTransactionRequest;
 import com.banking.eagle.service.AccountService;
+import com.banking.eagle.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,8 +24,12 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    public AccountController(AccountService accountService) {
+    private final TransactionService transactionService;
+
+    public AccountController(AccountService accountService,
+                             TransactionService transactionService) {
         this.accountService = accountService;
+        this.transactionService = transactionService;
     }
 
     @PostMapping
@@ -48,6 +55,26 @@ public class AccountController {
 
         return ResponseEntity.ok(accountsResponse);
     }
+
+    @GetMapping("/{accountId}")
+    public ResponseEntity<AccountResponse> getAccount(@PathVariable Long accountId) {
+        Account account = accountService.getAccount(accountId);
+
+        AccountResponse response = AccountResponse.builder()
+                .accountNumber(account.getAccountNumber())
+                .balance(account.getBalance())
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("{accountId}/transactions")
+    public ResponseEntity<AccountResponse> createTransaction(@RequestBody CreateTransactionRequest request, @PathVariable Long accountId) {
+        Transaction transaction = transactionService.createTransaction(request, accountId);
+
+        return ResponseEntity.ok(null);
+    }
+
 
 }
 

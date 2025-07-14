@@ -4,6 +4,7 @@ import com.banking.eagle.model.Account;
 import com.banking.eagle.model.User;
 import com.banking.eagle.model.request.CreateAccountRequest;
 import com.banking.eagle.repository.AccountRepository;
+import com.banking.eagle.repository.TransactionRepository;
 import com.banking.eagle.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,19 +20,22 @@ import java.util.Optional;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-
     private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
-    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository,
+                              UserRepository userRepository,
+                              CurrentUserService currentUserService) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+        this.currentUserService = currentUserService;
     }
 
     @Override
     public Account createAccount(CreateAccountRequest request) {
-        User user = getUserFromDbById(request.getUserId());
-
+        User user = currentUserService.getUserFromDb();
         Optional<Account> accountOpt = accountRepository.findByAccountNumber(request.getAccountNumber());
+
         if(accountOpt.isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account with account number " + request.getAccountNumber() + "already exists");
         }
@@ -47,29 +51,25 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Account> getAccounts() {
-        //get the username
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        //get the user by username
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with username: " + username + " not found");
-        }
-        //get the userId
-        List<Account> accounts = accountRepository.findAllByUserId(user.get().getId());
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with username: " + username + " not found"));
+
+        List<Account> accounts = accountRepository.findAllByUserId(user.getId());
+
         return accounts;
     }
 
-    private User getUserFromDbById(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id: " + userId + " not found");
-        }
+    @Override
+    public Account getAccount(Long accountId) {
+        User user = currentUserService.getUserFromDb();
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account with id: " + accountId + " not found"));
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!user.get().getUsername().equals(username)) {
+        if (!Objects.equals(account.getUser().getId(), user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this user.");
         }
 
-        return user.get();
+        return account;
     }
 }
