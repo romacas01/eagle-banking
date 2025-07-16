@@ -81,7 +81,7 @@ public class AccountController {
     public ResponseEntity<Transaction> getTransaction(@PathVariable Long accountId, @PathVariable Long transactionId) {
         Transaction transaction = transactionService.getTransaction(accountId, transactionId);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(transaction);
     }
 
 

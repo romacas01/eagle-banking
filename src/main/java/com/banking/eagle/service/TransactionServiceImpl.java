@@ -76,7 +76,7 @@ public class TransactionServiceImpl implements TransactionService{
     public Transaction getTransaction(Long accountId, Long transactionId) {
         Account account = checkIfAccountFromUser(accountId);
 
-        return transactionRepository.findByAccountIdAndId(account.getId(), transactionId)
+        return transactionRepository.findByAccountIdAndId(account, transactionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
     }
 
