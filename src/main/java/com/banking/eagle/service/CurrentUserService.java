@@ -7,8 +7,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
-
 @Service
 public class CurrentUserService {
 
@@ -18,7 +16,7 @@ public class CurrentUserService {
         this.userRepository = userRepository;
     }
 
-    public User getUserFromDb() {
+    public User getAuthenticatedUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return userRepository.findByUsername(username)

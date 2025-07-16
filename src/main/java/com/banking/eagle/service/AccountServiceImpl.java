@@ -4,7 +4,6 @@ import com.banking.eagle.model.Account;
 import com.banking.eagle.model.User;
 import com.banking.eagle.model.request.CreateAccountRequest;
 import com.banking.eagle.repository.AccountRepository;
-import com.banking.eagle.repository.TransactionRepository;
 import com.banking.eagle.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createAccount(CreateAccountRequest request) {
-        User user = currentUserService.getUserFromDb();
+        User user = currentUserService.getAuthenticatedUser();
         Optional<Account> accountOpt = accountRepository.findByAccountNumber(request.getAccountNumber());
 
         if(accountOpt.isPresent()) {
@@ -62,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccount(Long accountId) {
-        User user = currentUserService.getUserFromDb();
+        User user = currentUserService.getAuthenticatedUser();
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account with id: " + accountId + " not found"));
 

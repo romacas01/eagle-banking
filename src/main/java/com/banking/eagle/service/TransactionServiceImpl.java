@@ -9,16 +9,14 @@ import com.banking.eagle.repository.AccountRepository;
 import com.banking.eagle.repository.TransactionRepository;
 import com.banking.eagle.repository.UserRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Repository
 public class TransactionServiceImpl implements TransactionService{
@@ -41,21 +39,15 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     @Transactional
     public Transaction createTransaction(CreateTransactionRequest request, Long accountId) {
-        User user = currentUserService.getUserFromDb();
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
-
-        if (!Objects.equals(account.getUser().getId(), user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this account.");
-        }
+        Account account = checkIfAccountFromUser(accountId);
 
         if (request.getType().equalsIgnoreCase(TransactionType.DEPOSIT.getValue())) {
-            account.setBalance(account.getBalance().add(BigDecimal.valueOf(request.getAmount())));
+            account.setBalance(account.getBalance().add(request.getAmount()));
         }
 
         if (request.getType().equalsIgnoreCase(TransactionType.WITHDRAW.getValue())) {
-            if (account.getBalance().compareTo(BigDecimal.valueOf(request.getAmount())) >= 0) {
-                account.setBalance(account.getBalance().subtract(BigDecimal.valueOf(request.getAmount())));
+            if (account.getBalance().compareTo(request.getAmount()) >= 0) {
+                account.setBalance(account.getBalance().subtract(request.getAmount()));
             } else {
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "There are not enough funds in the account to perform transaction.");
 
@@ -71,5 +63,32 @@ public class TransactionServiceImpl implements TransactionService{
         accountRepository.save(account);
 
         return transactionRepository.save(transaction);
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Long accountId) {
+        Account account = checkIfAccountFromUser(accountId);
+
+        return account.getTransactions();
+    }
+
+    @Override
+    public Transaction getTransaction(Long accountId, Long transactionId) {
+        Account account = checkIfAccountFromUser(accountId);
+
+        return transactionRepository.findByAccountIdAndId(account.getId(), transactionId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+    }
+
+    private Account checkIfAccountFromUser(Long accountId) {
+        User authenticatedUser = currentUserService.getAuthenticatedUser();
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+
+        if (!Objects.equals(account.getUser().getId(), authenticatedUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this account.");
+        }
+
+        return account;
     }
 }
