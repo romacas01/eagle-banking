@@ -2,7 +2,6 @@ package com.banking.eagle.controller;
 
 import com.banking.eagle.model.Account;
 import com.banking.eagle.model.Transaction;
-import com.banking.eagle.model.User;
 import com.banking.eagle.model.request.AccountResponse;
 import com.banking.eagle.model.request.CreateAccountRequest;
 import com.banking.eagle.model.request.CreateAccountResponse;
@@ -11,12 +10,8 @@ import com.banking.eagle.service.AccountService;
 import com.banking.eagle.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/accounts")
@@ -69,8 +64,22 @@ public class AccountController {
     }
 
     @PostMapping("{accountId}/transactions")
-    public ResponseEntity<AccountResponse> createTransaction(@RequestBody CreateTransactionRequest request, @PathVariable Long accountId) {
+    public ResponseEntity<AccountResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest request, @PathVariable Long accountId) {
         Transaction transaction = transactionService.createTransaction(request, accountId);
+
+        return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("{accountId}/transactions")
+    public ResponseEntity<List<Transaction>> getTransactions(@PathVariable Long accountId) {
+        List<Transaction> transactions = transactionService.getTransactions(accountId);
+
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/{accountId}/transactions/{transactionId}")
+    public ResponseEntity<Transaction> getTransaction(@PathVariable Long accountId, @PathVariable Long transactionId) {
+        Transaction transaction = transactionService.getTransaction(accountId, transactionId);
 
         return ResponseEntity.ok(null);
     }

@@ -1,6 +1,7 @@
 package com.banking.eagle.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Entity
@@ -28,5 +30,8 @@ public class Account {
     @ManyToOne
     private User user;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
+    @JsonManagedReference
+    private List<Transaction> transactions;
 
 }
