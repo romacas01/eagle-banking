@@ -9,6 +9,7 @@ import com.banking.eagle.model.request.CreateTransactionRequest;
 import com.banking.eagle.service.AccountService;
 import com.banking.eagle.service.TransactionService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -18,7 +19,6 @@ import java.util.List;
 public class AccountController {
 
     private final AccountService accountService;
-
     private final TransactionService transactionService;
 
     public AccountController(AccountService accountService,
@@ -28,7 +28,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateAccountResponse> createAccount(@RequestBody CreateAccountRequest request) {
+    public ResponseEntity<CreateAccountResponse> createAccount(@Valid @RequestBody CreateAccountRequest request) {
         Account account = accountService.createAccount(request);
 
         CreateAccountResponse response = CreateAccountResponse.builder()
@@ -43,6 +43,7 @@ public class AccountController {
     @GetMapping
     public ResponseEntity<List<AccountResponse>> getAccounts() {
         List<Account> accounts = accountService.getAccounts();
+
         List<AccountResponse> accountsResponse = accounts.stream()
                 .map(account -> AccountResponse.builder()
                         .accountNumber(account.getAccountNumber())
@@ -64,10 +65,10 @@ public class AccountController {
     }
 
     @PostMapping("{accountId}/transactions")
-    public ResponseEntity<AccountResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest request, @PathVariable Long accountId) {
-        Transaction transaction = transactionService.createTransaction(request, accountId);
+    public ResponseEntity createTransaction(@Valid @RequestBody CreateTransactionRequest request, @PathVariable Long accountId) {
+        transactionService.createTransaction(request, accountId);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("{accountId}/transactions")

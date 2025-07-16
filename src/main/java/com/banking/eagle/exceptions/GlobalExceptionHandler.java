@@ -27,9 +27,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleResponseStatusException(ResponseStatusException ex) {
         HttpStatusCode statusCode = ex.getStatusCode();
 
-        if( statusCode == HttpStatus.NOT_FOUND) {
-            return ResponseEntity.notFound().build();
-        }
+//        if( statusCode == HttpStatus.NOT_FOUND) {
+//            return ResponseEntity.notFound().build();
+//        }
 
         return new ResponseEntity<>(ex.getStatusCode());
     }

@@ -18,8 +18,10 @@ public class Transaction {
 
     @Column(nullable = false)
     private TransactionType type;
+
     @Column(nullable = false)
     private BigDecimal amount;
+
     @Column(nullable = false)
     private LocalDateTime timestamp;
 

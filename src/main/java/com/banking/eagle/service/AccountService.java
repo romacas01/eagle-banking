@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface AccountService {
     Account createAccount(CreateAccountRequest request);
-
     List<Account> getAccounts();
-
     Account getAccount(Long accountId);
 }

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtProvider {
-    private static final String SECRET_KEY = "secret-key-example-secret-key-example"; // Must be at least 32 bytes
+    private static final String SECRET_KEY = "secret-key-example-secret-key-example";
     private static final long EXPIRATION_MS = 86400000;
     List<GrantedAuthority> grantedAuthorities = AuthorityUtils
             .commaSeparatedStringToAuthorityList("ROLE_USER");

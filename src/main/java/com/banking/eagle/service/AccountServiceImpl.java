@@ -54,9 +54,7 @@ public class AccountServiceImpl implements AccountService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with username: " + username + " not found"));
 
-        List<Account> accounts = accountRepository.findAllByUserId(user.getId());
-
-        return accounts;
+        return accountRepository.findAllByUserId(user.getId());
     }
 
     @Override

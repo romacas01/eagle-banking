@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface AccountRepository extends CrudRepository<Account, Long> {
     Optional<Account> findByAccountNumber(String number);
     List<Account> findAllByUserId(Long userId);
-
     Optional<Account> findById(Long accountId);
 }

@@ -24,6 +24,7 @@ public class Account {
 
     @Column(nullable = false)
     private String accountNumber;
+
     @Column(nullable = false)
     private BigDecimal balance;
 

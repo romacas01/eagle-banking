@@ -5,14 +5,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -23,18 +20,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtProvider = jwtProvider;
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getServletPath();
-
-        return path.startsWith("/v1/auth") ||
-                path.startsWith("/h2-console") ||
-                path.startsWith("/swagger-ui") ||
-                path.equals("/swagger-ui.html") ||
-                path.equals("/swagger-ui/index.html") ||
-                path.startsWith("/v3/api-docs") ||
-                path.equals("/v3/api-docs/swagger-config");
-    }
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        String path = request.getServletPath();
+//
+//        return path.startsWith("/v1/auth") ||
+//                path.startsWith("/h2-console") ||
+//                path.startsWith("/swagger-ui") ||
+//                path.equals("/swagger-ui.html") ||
+//                path.equals("/swagger-ui/index.html") ||
+//                path.startsWith("/v3/api-docs") ||
+//                path.equals("/v3/api-docs/swagger-config");
+//    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
