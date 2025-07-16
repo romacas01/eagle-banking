@@ -27,7 +27,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getServletPath();
 
-        return path.startsWith("/v1/auth") || path.startsWith("/h2-console");
+        return path.startsWith("/v1/auth") ||
+                path.startsWith("/h2-console") ||
+                path.startsWith("/swagger-ui") ||
+                path.equals("/swagger-ui.html") ||
+                path.equals("/swagger-ui/index.html") ||
+                path.startsWith("/v3/api-docs") ||
+                path.equals("/v3/api-docs/swagger-config");
     }
 
     @Override
@@ -45,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         username, null,  authorities);
 
+                //Where the user is authenticated
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             } catch (Exception e) {
                 // Invalid token, log if needed
