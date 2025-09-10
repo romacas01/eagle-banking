@@ -4,8 +4,6 @@
 
 Add DTOs and mappers (MapStruct) instead of exposing JPA entities directly in responses.
 
-Use service interfaces everywhere (currently only partially done).
-
 # Error Handling
 
 Return standardized error responses with errorCode, message, timestamp, traceId (instead of raw ResponseEntity).
@@ -24,7 +22,7 @@ Store password history and enforce password policies.
 
 Add unit tests (Mockito/JUnit) and integration tests (SpringBootTest + Testcontainers for DB).
 
-Consider contract testing with Spring Cloud Contract if you want to showcase microservice readiness.
+Consider contract testing with Spring Cloud Contract.
 
 # Observability
 
@@ -40,15 +38,13 @@ Use Flyway/Liquibase for DB migrations.
 
 Add optimistic locking (via @Version) on entities like Account to prevent race conditions on balance updates.
 
-Handle concurrent transactions properly (maybe with pessimistic locking for withdrawals)
+Handle concurrent transactions properly (maybe with pessimistic locking for withdrawals?)
 
 # Event-Driven Architecture (Kafka)
 
 Publish an event (TransactionCreatedEvent) whenever a transaction happens.
 
 Have a consumer service that processes analytics, fraud detection, or audit logging.
-
-This shows scalability and decoupling.
 
 # Async Processing
 
@@ -72,9 +68,9 @@ Transfer between accounts (intra-user and inter-user).
 
 Provide OpenAPI/Swagger docs with proper annotations.
 
-Add HATEOAS for hypermedia-driven APIs (shows REST maturity).
+Add HATEOAS for hypermedia-driven APIs.
 
-Implement a GraphQL API in parallel with REST (shows versatility).
+Implement a GraphQL API in parallel with REST.
 
 # Security / Compliance
 
