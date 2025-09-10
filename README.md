@@ -2,8 +2,6 @@
 
 # Architecture & Design
 
-Introduce layered/domain-driven design (DDD) with domain, application, infrastructure, and api packages.
-
 Add DTOs and mappers (MapStruct) instead of exposing JPA entities directly in responses.
 
 Use service interfaces everywhere (currently only partially done).
