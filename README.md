@@ -2,94 +2,94 @@
 
 # Architecture & Design
 
-Add DTOs and mappers (MapStruct) instead of exposing JPA entities directly in responses.
+- [ ] Add DTOs and mappers (MapStruct) instead of exposing JPA entities directly in responses.
 
 # Error Handling
 
-Return standardized error responses with errorCode, message, timestamp, traceId (instead of raw ResponseEntity).
+- [ ] Return standardized error responses with errorCode, message, timestamp, traceId (instead of raw ResponseEntity).
 
-Implement a problem-details RFC 7807 compliant error model.
+- [ ] Implement a problem-details RFC 7807 compliant error model.
 
 # Security Enhancements
 
-Support role-based access control (RBAC): e.g., ROLE_ADMIN, ROLE_USER, ROLE_AUDITOR.
+- [ ] Support role-based access control (RBAC): e.g., ROLE_ADMIN, ROLE_USER, ROLE_AUDITOR.
 
-Add refresh tokens alongside JWTs.
+- [ ] Add refresh tokens alongside JWTs.
 
-Store password history and enforce password policies.
+- [ ] Store password history and enforce password policies.
 
 # Testing
 
-Add unit tests (Mockito/JUnit) and integration tests (SpringBootTest + Testcontainers for DB).
+- [ ] Add unit tests (Mockito/JUnit) and integration tests (SpringBootTest + Testcontainers for DB).
 
-Consider contract testing with Spring Cloud Contract.
+- [ ] Contract testing with Spring Cloud Contract.
 
 # Observability
 
-Add logging with correlation IDs (MDC in SLF4J/Logback).
+- [ ] Add logging with correlation IDs (MDC in SLF4J/Logback).
 
-Expose metrics (Micrometer + Prometheus) and health checks.
+- [ ] Expose metrics (Micrometer + Prometheus) and health checks.
 
-Implement audit logging for transactions.
+- [ ] Implement audit logging for transactions.
 
 # Database & Data Handling
 
-Use Flyway/Liquibase for DB migrations.
+- [ ] Use Flyway/Liquibase for DB migrations.
 
-Add optimistic locking (via @Version) on entities like Account to prevent race conditions on balance updates.
+- [ ] Add optimistic locking (via @Version) on entities like Account to prevent race conditions on balance updates.
 
-Handle concurrent transactions properly (maybe with pessimistic locking for withdrawals?)
+- [ ] Handle concurrent transactions properly (maybe with pessimistic locking for withdrawals?)
 
 # Event-Driven Architecture (Kafka)
 
-Publish an event (TransactionCreatedEvent) whenever a transaction happens.
+- [ ] Publish an event (TransactionCreatedEvent) whenever a transaction happens.
 
-Have a consumer service that processes analytics, fraud detection, or audit logging.
+- [ ] Have a consumer service that processes analytics, fraud detection, or audit logging.
 
 # Async Processing
 
-Long-running operations (e.g., statement generation) handled via Spring events or Kafka.
+- [ ] Long-running operations (e.g., statement generation) handled via Spring events or Kafka.
 
-Use Spring @Async or virtual threads for concurrency.
+- [ ] Use Spring @Async or virtual threads for concurrency.
 
 # Advanced Banking Features
 
-Scheduled payments / recurring transactions.
+- [ ] Scheduled payments / recurring transactions.
 
-Overdraft protection with configurable limits.
+- [ ] Overdraft protection with configurable limits.
 
-Account types (checking, savings, loan).
+- [ ] Account types (checking, savings, loan).
 
-Interest calculation jobs (scheduled task).
+- [ ] Interest calculation jobs (scheduled task).
 
-Transfer between accounts (intra-user and inter-user).
+- [ ] Transfer between accounts (intra-user and inter-user).
 
 # User Experience
 
-Provide OpenAPI/Swagger docs with proper annotations.
+- [ ] Provide OpenAPI/Swagger docs with proper annotations.
 
-Add HATEOAS for hypermedia-driven APIs.
+- [ ] Add HATEOAS for hypermedia-driven APIs.
 
-Implement a GraphQL API in parallel with REST.
+- [ ] Implement a GraphQL API in parallel with REST.
 
 # Security / Compliance
 
-Add two-factor authentication (2FA) with OTP/email.
+- [ ] Add two-factor authentication (2FA) with OTP/email.
 
-Implement audit trails (who did what, when).
+- [ ] Implement audit trails (who did what, when).
 
-Demonstrate GDPR-like data handling (soft delete / anonymization).
+- [ ] Demonstrate GDPR-like data handling (soft delete / anonymization).
 
 # Cloud / Deployment
 
-Containerize with Docker, orchestrate with Kubernetes manifests.
+- [ ] Containerize with Docker, orchestrate with Kubernetes manifests.
 
-Add CI/CD pipeline (GitHub Actions) for tests, linting, and deployment.
+- [ ] Add CI/CD pipeline (GitHub Actions) for tests, linting, and deployment.
 
-Externalize configs with Spring Cloud Config or environment variables.
+- [ ] Externalize configs with Spring Cloud Config or environment variables.
 
 # Scalability Enhancements
 
-Introduce caching (Redis) for frequently accessed data (e.g., user lookups).
+- [ ] Introduce caching (Redis) for frequently accessed data (e.g., user lookups).
 
-Implement rate limiting (e.g., Bucket4j or Redis) to prevent abuse.
+- [ ] Implement rate limiting (e.g., Bucket4j or Redis) to prevent abuse.
