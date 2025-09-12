@@ -8,6 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 public class AuthService {
 
@@ -22,13 +24,12 @@ public class AuthService {
     }
 
     public String authenticate(String username, String password) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+        Optional<User> user = userRepository.findByUsername(username);
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (user.isEmpty() || !passwordEncoder.matches(password, user.get().getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
-        return jwtProvider.generateToken(user);
+        return jwtProvider.generateToken(user.get());
     }
 }

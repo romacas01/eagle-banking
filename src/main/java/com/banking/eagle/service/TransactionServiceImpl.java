@@ -7,32 +7,26 @@ import com.banking.eagle.model.User;
 import com.banking.eagle.model.request.CreateTransactionRequest;
 import com.banking.eagle.repository.AccountRepository;
 import com.banking.eagle.repository.TransactionRepository;
-import com.banking.eagle.repository.UserRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-@Repository
+@Service
 public class TransactionServiceImpl implements TransactionService{
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
-
     private final CurrentUserService currentUserService;
 
     public TransactionServiceImpl(TransactionRepository transactionRepository,
                                   AccountRepository accountRepository,
-                                  UserRepository userRepository,
                                   CurrentUserService currentUserService) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
         this.currentUserService = currentUserService;
     }
 

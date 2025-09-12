@@ -1,38 +1,60 @@
 package com.banking.eagle.exceptions;
 
+import com.banking.eagle.api.ProblemDetails;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.Instant;
+import java.util.UUID;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage())
-        );
-        return ResponseEntity.badRequest().body(errors);
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ProblemDetails> handleResponseStatusException(ResponseStatusException ex) {
+        ProblemDetails problem = ProblemDetails.builder()
+                .status(ex.getStatusCode().value())
+                .errorCode("BUSINESS_ERROR")
+                .message(ex.getReason())
+                .traceId(UUID.randomUUID().toString())
+                .timestamp(Instant.now())
+                .build();
+        return ResponseEntity.status(ex.getStatusCode()).body(problem);
     }
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<?> handleResponseStatusException(ResponseStatusException ex) {
-        HttpStatusCode statusCode = ex.getStatusCode();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ProblemDetails> handleValidationErrors(MethodArgumentNotValidException ex) {
+        String message = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + " " + error.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation failed");
 
-//        if( statusCode == HttpStatus.NOT_FOUND) {
-//            return ResponseEntity.notFound().build();
-//        }
+        ProblemDetails problem = ProblemDetails.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .errorCode("VALIDATION_ERROR")
+                .message(message)
+                .traceId(UUID.randomUUID().toString())
+                .timestamp(Instant.now())
+                .build();
+        return ResponseEntity.badRequest().body(problem);
+    }
 
-        return new ResponseEntity<>(ex.getStatusCode());
+    @ExceptionHandler(Exception.class) // catch-all
+    public ResponseEntity<ProblemDetails> handleGenericException(Exception ex) {
+        ProblemDetails problem = ProblemDetails.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .errorCode("INTERNAL_ERROR")
+                .message("Unexpected error occurred")
+                .traceId(UUID.randomUUID().toString())
+                .timestamp(Instant.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problem);
     }
 }
+
 
 

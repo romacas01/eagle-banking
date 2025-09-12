@@ -31,6 +31,7 @@ public class Account {
     @ManyToOne
     private User user;
 
+    @ElementCollection
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
     @JsonManagedReference
     private List<Transaction> transactions;
