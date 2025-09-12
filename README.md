@@ -6,9 +6,7 @@
 
 # Error Handling
 
-- [ ] Return standardized error responses with errorCode, message, timestamp, traceId (instead of raw ResponseEntity).
-
-- [ ] Implement a problem-details RFC 7807 compliant error model.
+- [ ] Return standardized error responses with errorCode, message, timestamp, traceId (instead of raw ResponseEntity). Implement a problem-details RFC 7807 compliant error model.
 
 # Security Enhancements
 
