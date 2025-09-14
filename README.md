@@ -1,5 +1,24 @@
 # Future improvements
 
+# Advanced Banking Features
+- [ ] Create a specific controller for the transaction (at the moment they are nested within the Account controller)
+
+- [ ] Add a new 'Transfer' type to the TransactionType enum. A Transfer should be considered a pair of Withdraw and Deposit types. Add a new 'transferId' field in the Transaction class, if a transaction is a transfer that field would be populated, otherwise it would be null. Also add new methods in the transaction service to handle transfers (Use @Transactional)
+
+- [ ] Add transaction limits. There’s a daily limit of £5,000 for withdraws and £10000 for deposits. If the new transaction would exceed the limit, it should be rejected.
+    
+- [ ] Add a new field 'transactionState' to the Transaction class. That field will have the value 'normal' as default, and shouls be marked as 'suspicious' if the transaction limit rule is breached (see checkbox above)
+
+- [ ] If a customer has more than £20,000 total in deposits in the last 24 hours, automatically mark all deposits in that 24-hour window as SUSPICIOUS
+
+- [ ] Scheduled payments / recurring transactions.
+
+- [ ] Overdraft protection with configurable limits.
+
+- [ ] Account types (checking, savings, loan).
+
+- [ ] Interest calculation jobs (scheduled task).
+
 # Architecture & Design
 
 - [ ] Add DTOs and mappers (MapStruct) instead of exposing JPA entities directly in responses.
@@ -49,18 +68,6 @@
 - [ ] Long-running operations (e.g., statement generation) handled via Spring events or Kafka.
 
 - [ ] Use Spring @Async or virtual threads for concurrency.
-
-# Advanced Banking Features
-
-- [ ] Scheduled payments / recurring transactions.
-
-- [ ] Overdraft protection with configurable limits.
-
-- [ ] Account types (checking, savings, loan).
-
-- [ ] Interest calculation jobs (scheduled task).
-
-- [ ] Transfer between accounts (intra-user and inter-user).
 
 # User Experience
 
